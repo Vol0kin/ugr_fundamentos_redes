@@ -14,6 +14,7 @@ public class YodafyServidorIterativo {
 
 		// Puerto de escucha
 		int port=8989;
+		int numPeticiones = 0;
 
 		// Socket del servidor
 		ServerSocket serverSocket;
@@ -41,19 +42,18 @@ public class YodafyServidorIterativo {
 
 				try {
 					socketServicio = serverSocket.accept();
+					numPeticiones++;
 
-					System.out.println("Recibido socket cliente");
+					System.out.println("Recibido socket cliente " + numPeticiones);
 
 					System.out.println("Yoda se prepara para procesar la peticion...");
 
 					// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
 					// argumento el nuevo socket, para que realice el procesamiento
 					// Este esquema permite que se puedan usar hebras más fácilmente.
-					YodaThread yodaThread = new YodaThread(socketServicio);
+					YodafyThread yodaThread = new YodafyThread(socketServicio, numPeticiones);
 
 					yodaThread.start();
-					
-					socketServicio.close();
 				} catch (IOException e) {
 					System.err.println("Error: no se pudo aceptar la conexion solicitada");
 				}

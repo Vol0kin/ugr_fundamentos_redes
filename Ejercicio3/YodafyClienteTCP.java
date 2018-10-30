@@ -22,59 +22,66 @@ public class YodafyClienteTCP {
 		String host="localhost";
 		// Puerto en el que espera el servidor:
 		int port=8989;
+		int numPeticion = 0;
 
 		// Socket para la conexión TCP
 		Socket socketServicio=null;
 
-		try {
-			// Creamos un socket que se conecte a "host" y "port":
-			//////////////////////////////////////////////////////
-			socketServicio = new Socket (host,port);
-			//////////////////////////////////////////////////////
+		// Se mandan 10000 peticiones por cliente para poder comprobar el procesamiento
+		// concurrente del servidor
+		for (int i = 0; i < 10000; i++) {
+			numPeticion++;
 
-			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
-			BufferedReader inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
+			try {
+				// Creamos un socket que se conecte a "host" y "port":
+				//////////////////////////////////////////////////////
+				socketServicio = new Socket (host,port);
+				//////////////////////////////////////////////////////
 
-			// Si queremos enviar una cadena de caracteres por un OutputStream, hay que pasarla primero
-			// a un array de bytes:
-			envio = "Al monte del volcán debes ir sin demora";
+				PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
+				BufferedReader inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
 
-			// Enviamos el array por el outputStream;
-			//////////////////////////////////////////////////////
-			outPrinter.println(envio);
-			//////////////////////////////////////////////////////
+				// Si queremos enviar una cadena de caracteres por un OutputStream, hay que pasarla primero
+				// a un array de bytes:
+				envio = "Al monte del volcán debes ir sin demora";
 
-			// Aunque le indiquemos a TCP que queremos enviar varios arrays de bytes, sólo
-			// los enviará efectivamente cuando considere que tiene suficientes datos que enviar...
-			// Podemos usar "flush()" para obligar a TCP a que no espere para hacer el envío:
-			//////////////////////////////////////////////////////
-			outPrinter.flush();
-			//////////////////////////////////////////////////////
-			System.out.println("Enviado:");
-			System.out.println(envio);
+				// Enviamos el array por el outputStream;
+				//////////////////////////////////////////////////////
+				outPrinter.println(envio);
+				//////////////////////////////////////////////////////
 
-			// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
-			// rellenar. El método "read(...)" devolverá el número de bytes leídos.
-			//////////////////////////////////////////////////////
-			salida = inReader.readLine();
-			//////////////////////////////////////////////////////
+				// Aunque le indiquemos a TCP que queremos enviar varios arrays de bytes, sólo
+				// los enviará efectivamente cuando considere que tiene suficientes datos que enviar...
+				// Podemos usar "flush()" para obligar a TCP a que no espere para hacer el envío:
+				//////////////////////////////////////////////////////
+				outPrinter.flush();
+				//////////////////////////////////////////////////////
+				System.out.println("Enviada peticion " + numPeticion + ":");
+				System.out.println(envio);
 
-			// Mostremos la cadena de caracteres recibidos:
-			System.out.println("Recibido: ");
+				// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
+				// rellenar. El método "read(...)" devolverá el número de bytes leídos.
+				//////////////////////////////////////////////////////
+				salida = inReader.readLine();
+				//////////////////////////////////////////////////////
 
-			System.out.println(salida);
+				// Mostremos la cadena de caracteres recibidos:
+				System.out.println("Recibida respuesta " + numPeticion + ":");
 
-			// Una vez terminado el servicio, cerramos el socket (automáticamente se cierran
-			// el inpuStream  y el outputStream)
-			//////////////////////////////////////////////////////
-			socketServicio.close();
-			//////////////////////////////////////////////////////
+				System.out.println(salida);
 
-			// Excepciones:
-		} catch (UnknownHostException e) {
-			System.err.println("Error: Nombre de host no encontrado.");
-		} catch (IOException e) {
-			System.err.println("Error de entrada/salida al abrir el socket.");
+				// Una vez terminado el servicio, cerramos el socket (automáticamente se cierran
+				// el inpuStream  y el outputStream)
+				//////////////////////////////////////////////////////
+				socketServicio.close();
+				//////////////////////////////////////////////////////
+
+				// Excepciones:
+			} catch (UnknownHostException e) {
+				System.err.println("Error: Nombre de host no encontrado.");
+			} catch (IOException e) {
+				System.err.println("Error de entrada/salida al abrir el socket.");
+			}
 		}
 	}
 }
