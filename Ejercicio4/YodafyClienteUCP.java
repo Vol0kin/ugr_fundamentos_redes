@@ -20,9 +20,11 @@ public class YodafyClienteUCP {
 		
 		int puerto=8989;
 		InetAddress direccion;
-		DatagramPacket paquete;
-		byte[] bufer = new byte[256];
+		DatagramPacket paquete, paqueteRecepcion;
+		byte []buferEnvio = new byte[256];
+		byte []buferRecepcion = new byte[256];
 		DatagramSocket socket;
+		String fraseYodificada;
 		
 		try {
 			// Creamos un socket que se conecte a "host" y "port":
@@ -30,15 +32,17 @@ public class YodafyClienteUCP {
 			socket = new DatagramSocket();
 			direccion = InetAddress.getByName("localhost");
 			//////////////////////////////////////////////////////			
-						
+			
 			// Si queremos enviar una cadena de caracteres por un OutputStream, hay que pasarla primero
 			// a un array de bytes:
-			bufer = "Al monte del volcán debes ir sin demora".getBytes();
+			buferEnvio = "Al monte del volcán debes ir sin demora".getBytes();
 			
 			// Enviamos el array por el outputStream;
 			//////////////////////////////////////////////////////
-			paquete = new DatagramPacket(bufer, bufer.length, direccion,puerto);
+			paquete = new DatagramPacket(buferEnvio, buferEnvio.length, direccion, puerto);
+			fraseYodificada = new String(paquete.getData());
 			socket.send(paquete);
+			System.out.println("Paquete enviado");
 			//////////////////////////////////////////////////////
 			
 			// Aunque le indiquemos a TCP que queremos enviar varios arrays de bytes, sólo
@@ -51,11 +55,10 @@ public class YodafyClienteUCP {
 			// Leemos la respuesta del servidor. Para ello le pasamos un array de bytes, que intentará
 			// rellenar. El método "read(...)" devolverá el número de bytes leídos.
 			//////////////////////////////////////////////////////
-			paquete = new DatagramPacket(bufer, bufer.length);
-			socket.receive(paquete);
-			paquete.getData();
-			paquete.getAddress();
-			paquete.getPort();
+			paqueteRecepcion = new DatagramPacket(buferRecepcion, buferRecepcion.length);
+			socket.receive(paqueteRecepcion);
+			fraseYodificada = new String(paqueteRecepcion.getData());
+			System.out.println("Contenido del paquete recibido: " + fraseYodificada );
 			//////////////////////////////////////////////////////
 			
 			
