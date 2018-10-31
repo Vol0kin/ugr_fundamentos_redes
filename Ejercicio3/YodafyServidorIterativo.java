@@ -42,22 +42,20 @@ public class YodafyServidorIterativo {
 
 				try {
 					socketServicio = serverSocket.accept();
+					numPeticiones++;
+
+					System.out.println("Recibido socket cliente " + numPeticiones);
+
+					System.out.println("Yoda se prepara para procesar la peticion...");
+
+					// Se crea un nuevo thread para la peticion que ha llegado
+					YodafyThread yodaThread = new YodafyThread(socketServicio, numPeticiones);
+
+					// Se inicializa el thread
+					yodaThread.start();
 				} catch (IOException e) {
 					System.err.println("Error: no se pudo aceptar la conexion solicitada");
 				}
-
-				numPeticiones++;
-
-				System.out.println("Recibido socket cliente " + numPeticiones);
-
-				System.out.println("Yoda se prepara para procesar la peticion...");
-
-				// Se crea un nuevo thread para la peticion que ha llegado
-				YodafyThread yodaThread = new YodafyThread(socketServicio, numPeticiones);
-
-				// Se inicializa el thread
-				yodaThread.start();
-
 
 			} while (true);
 
