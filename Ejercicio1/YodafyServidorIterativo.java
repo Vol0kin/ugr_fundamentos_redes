@@ -46,16 +46,16 @@ public class YodafyServidorIterativo {
 
 			try {
 				socketServicio = serverSocket.accept();
-
-				System.out.println("Recibido socket cliente");
-				System.out.println("Yoda se prepara para procesar la peticion...");
-				// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
-				// argumento el nuevo socket, para que realice el procesamiento
-				// Este esquema permite que se puedan usar hebras más fácilmente.
-
 			} catch (IOException e) {
 				System.err.println("Error: no se pudo aceptar la conexion solicitada");
 			}
+
+			System.out.println("Recibido socket cliente");
+			System.out.println("Yoda se prepara para procesar la peticion...");
+
+			// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
+			// argumento el nuevo socket, para que realice el procesamiento
+			// Este esquema permite que se puedan usar hebras más fácilmente.
 
 			ProcesadorYodafy procesador=new ProcesadorYodafy(socketServicio);
 			procesador.procesa();
