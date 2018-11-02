@@ -2,13 +2,34 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.ServerSocket;
+import java.util.Random;
 
 public class Ahorcado{
-    public static void main(String[] args) {
+    private Socket socketServicio;
+    // stream de lectura (por aquí se recibe lo que envía el cliente)
+    private InputStream inputStream;
+    // stream de escritura (por aquí se envía los datos al cliente)
+    private OutputStream outputStream;
+
+    // Para que la respuesta sea siempre diferente, usamos un generador de números aleatorios.
+    private Random random;
+    String respuesta;
+
+    public Ahorcado(Socket socketServicio) {
+        this.socketServicio=socketServicio;
+        random=new Random();
+    }
+
+    public void ahorcame(){    
         File archivo = null;
         FileReader fr = null;
         BufferedReader br = null;
         ArrayList<String> palabras = new ArrayList<String>();
+        byte [] datosRecibidos=new byte[1024];
+        byte [] datosEnviar;
 
         try {
             archivo = new File ("palabras.txt");
@@ -26,58 +47,85 @@ public class Ahorcado{
         }
         
 
-        String palabra = palabras.get( (int) (Math.random() * palabras.size()) );
-        char[] letrasEncotradas = new char[palabra.length()];
-        int cont = 0, intentos = 10;
-        boolean encontrada = false;
 
-        System.out.println("(Servidor) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos");
+        try {
+            String palabra = palabras.get( (int) (Math.random() * palabras.size()) );
+            char[] letrasEncotradas = new char[palabra.length()];
+            int cont = 0, intentos = 10, bytesRecibidos = 0;
+            boolean encontrada = false;
+            inputStream=socketServicio.getInputStream();
+            outputStream=socketServicio.getOutputStream();
 
-        while ( !encontrada && intentos > 0 ){
+            respuesta = "(Servidor) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
 
-            System.out.print("\n(Servidor) Inserta una letra > ");
-            Scanner input = new Scanner(System.in);
-            char userInput = input.nextLine().charAt(0);
+            while ( !encontrada && intentos > 0 ){
+
+                respuesta += "\n(Cliente) Inserta una letra > ";
+
+                datosEnviar=respuesta.getBytes();
+                outputStream.write(datosEnviar, 0, datosEnviar.length);
+                respuesta = "";
+
+                bytesRecibidos = inputStream.read(datosRecibidos);
+                // String str = new String(datosRecibidos,0,bytesRecibidos);
+                // System.out.println("\n\n" + bytesRecibidos + str);
+                String peticion = new String(datosRecibidos,0,bytesRecibidos);
+                //Scanner input = new Scanner(System.in);
+                char userInput = peticion.charAt(0);
 
 
-            if ( contiene(letrasEncotradas, userInput, cont) ){
-                intentos--;
-                System.out.println("(Servidor) La letra " + userInput + 
-                                   " ya la has dicho, te quedan " + intentos + " intentos");
-            }
+                if ( contiene(letrasEncotradas, userInput, cont) ){
+                    intentos--;
+                    respuesta += "(Servidor) La letra " + userInput + 
+                                 " ya la has dicho, te quedan " + intentos + " intentos";
+                }
 
-            else if ( palabra.contains(String.valueOf(userInput)) ){
-                letrasEncotradas[cont] = userInput;
-                cont++;
-            }
+                else if ( palabra.contains(String.valueOf(userInput)) ){
+                    letrasEncotradas[cont] = userInput;
+                    cont++;
+                }
 
-            else{
-                intentos--;
-                System.out.println("(Servidor) La letra "+ userInput + 
-                                   " no se encuentra en la palabra, te quedan " + intentos + " intentos");
-            }
+                else{
+                    intentos--;
+                    respuesta += "(Servidor) La letra "+ userInput + 
+                                 " no se encuentra en la palabra, te quedan " + intentos + " intentos";
+                }
 
-            if ( !hayHuecos(palabra,letrasEncotradas) )
-                encontrada = true;
-        } 
+                if ( !hayHuecos(palabra,letrasEncotradas, respuesta) )
+                    encontrada = true;
 
-        if ( intentos==0 )
-            System.out.println("\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n");
-        else
-            System.out.println("\n(Servidor) Adivinaste la palabra. Has ganado!");
+                datosEnviar=respuesta.getBytes();
+                outputStream.write(datosEnviar, 0, datosEnviar.length);
+                outputStream.flush();
+                respuesta = "";
+            } 
+
+            if ( intentos==0 )
+                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
+            else
+                respuesta += "\n(Servidor) Adivinaste la palabra. Has ganado!";
+               
+
+            datosEnviar=respuesta.getBytes();
+            outputStream.write(datosEnviar, 0, datosEnviar.length);
+            outputStream.flush();
+
+        } catch (IOException e) {
+            System.err.println("Error al obtener los flujso de entrada/salida.");
+        }
     }
 
 
-    public static boolean hayHuecos(String palabra, char[] letrasEncotradas) {
+    public static boolean hayHuecos(String palabra, char[] letrasEncotradas, String respuesta) {
         boolean huecoEncontrado = false;
 
         for (int i = 0; i < palabra.length(); i++) {
             char letra = palabra.charAt(i);
 
             if ( new String(letrasEncotradas).contains(String.valueOf(letra)) )
-                System.out.print(letra);
+                respuesta += letra;
             else {
-                System.out.print('_');
+                respuesta += '_';
                 huecoEncontrado = true;
             }
         }
