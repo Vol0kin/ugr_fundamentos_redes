@@ -43,7 +43,6 @@ public class YodafyServidorIterativo {
 					socketServicio = serverSocket.accept();
 
 					System.out.println("Recibido socket cliente");
-
 					System.out.println("Yoda se prepara para procesar la peticion...");
 
 					// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
@@ -54,12 +53,9 @@ public class YodafyServidorIterativo {
 					procesador.procesa();
 
 					System.out.println("Yoda ha procesado la peticion. Respuesta enviada");
-
-					socketServicio.close();
 				} catch (IOException e) {
 					System.err.println("Error: no se pudo aceptar la conexion solicitada");
 				}
-
 
 			} while (true);
 
