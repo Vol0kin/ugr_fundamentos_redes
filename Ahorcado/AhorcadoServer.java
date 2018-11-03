@@ -13,7 +13,7 @@ import java.util.Random;
 // YodafyServidorIterativo
 // (CC) jjramos, 2012
 //
-public class YodafyServidorIterativo {
+public class AhorcadoServer {
 
 	public static void main(String[] args) {
 

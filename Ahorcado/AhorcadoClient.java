@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class YodafyClienteTCP {
+public class AhorcadoClient {
 
 	public static void main(String[] args) {
 		String mensajeServidor;
@@ -37,8 +37,11 @@ public class YodafyClienteTCP {
 
 			mensajeServidor = inReader.readLine();
 			System.out.println(mensajeServidor);
-			
+
 			do{
+				mensajeServidor = inReader.readLine();
+				System.out.println(mensajeServidor);
+
 				mensajeServidor = inReader.readLine();
 				System.out.println(mensajeServidor);
 

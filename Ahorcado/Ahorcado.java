@@ -41,6 +41,7 @@ public class Ahorcado{
 		boolean encontrada = false;
 		String respuesta;
 
+		// Obtener las letras unicas de la palabra
 		for (char c : palabra.toCharArray()) {
 			letrasPalabra.add(c);
 		}
@@ -53,45 +54,41 @@ public class Ahorcado{
 			outPrinter.println(respuesta);
 
             while ( !encontrada && intentos > 0 ){
-
+				this.mostrarPalabra(letrasAcertadas);
                 respuesta = "(Cliente) Inserta una letra:";
                 outPrinter.println(respuesta);
 
-                respuesta = "";
+				respuesta = "";
 
                 String peticion = inReader.readLine();
                 //Scanner input = new Scanner(System.in);
                 char userInput = peticion.charAt(0);
 
-                if (letrasAcertadas.contains(userInput)){
+                if (letrasAcertadas.contains(userInput)) {
                     intentos--;
-                    respuesta += "(Servidor) La letra " + userInput +
+                    respuesta = "(Servidor) La letra " + userInput +
                                  " ya la has dicho, te quedan " + intentos + " intentos";
-                }
-
-                else if (letrasPalabra.contains(userInput)){
+                } else if (letrasPalabra.contains(userInput)) {
                     letrasAcertadas.add(userInput);
 					letrasPalabra.remove(userInput);
-                }
-
-                else{
+                } else {
                     intentos--;
-                    respuesta += "(Servidor) La letra "+ userInput +
+                    respuesta = "(Servidor) La letra "+ userInput +
                                  " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
 
-                if (letrasPalabra.isEmpty())
+                if (letrasPalabra.isEmpty()) {
                     encontrada = true;
+				}
 
                 outPrinter.println(respuesta);
-                respuesta = "";
             }
 
-            if ( intentos==0 )
-                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
-            else
-                respuesta += "\n(Servidor) Adivinaste la palabra. Has ganado!";
-
+            if (intentos == 0) {
+                respuesta += "(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
+            } else {
+				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!";
+			}
 
             outPrinter.println(respuesta);
             System.out.println("meeeeh");
@@ -101,28 +98,17 @@ public class Ahorcado{
         }
     }
 
+	private void mostrarPalabra(Set<Character> acertadas) {
+		String palabraEnviada = "";
 
-    public static boolean hayHuecos(String palabra, char[] letrasEncotradas, String respuesta) {
-        boolean huecoEncontrado = false;
+		for (char c : palabra.toCharArray()) {
+			if (acertadas.contains(c)) {
+				palabraEnviada += c + " ";
+			} else {
+				palabraEnviada += "_ ";
+			}
+		}
 
-        for (int i = 0; i < palabra.length(); i++) {
-            char letra = palabra.charAt(i);
-
-            if ( new String(letrasEncotradas).contains(String.valueOf(letra)) )
-                respuesta += letra;
-            else {
-                respuesta += '_';
-                huecoEncontrado = true;
-            }
-        }
-        return huecoEncontrado;
-    }
-
-    public static boolean contiene(char[] letrasEncotradas, char letra, int cont){
-        boolean encontrada = false;
-        for (int i = 0; i < cont && encontrada == false; i++)
-            if (letrasEncotradas[i] == letra) encontrada = true;
-        return encontrada;
-    }
-
+		outPrinter.println(palabraEnviada);
+	}
 }
