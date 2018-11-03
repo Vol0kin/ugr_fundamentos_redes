@@ -16,7 +16,7 @@ public class Ahorcado{
 
     // Para que la respuesta sea siempre diferente, usamos un generador de números aleatorios.
     private Random random;
-    String respuesta;
+    private static String respuesta;
 
     public Ahorcado(Socket socketServicio) {
         this.socketServicio=socketServicio;
@@ -67,8 +67,6 @@ public class Ahorcado{
                 respuesta = "";
 
                 bytesRecibidos = inputStream.read(datosRecibidos);
-                // String str = new String(datosRecibidos,0,bytesRecibidos);
-                // System.out.println("\n\n" + bytesRecibidos + str);
                 String peticion = new String(datosRecibidos,0,bytesRecibidos);
                 //Scanner input = new Scanner(System.in);
                 char userInput = peticion.charAt(0);
@@ -91,12 +89,11 @@ public class Ahorcado{
                                  " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
 
-                if ( !hayHuecos(palabra,letrasEncotradas, respuesta) )
+                if ( !hayHuecos(palabra,letrasEncotradas) )
                     encontrada = true;
-
+                
                 datosEnviar=respuesta.getBytes();
                 outputStream.write(datosEnviar, 0, datosEnviar.length);
-                outputStream.flush();
                 respuesta = "";
             } 
 
@@ -109,6 +106,7 @@ public class Ahorcado{
             datosEnviar=respuesta.getBytes();
             outputStream.write(datosEnviar, 0, datosEnviar.length);
             outputStream.flush();
+            System.out.println("meeeeh");
 
         } catch (IOException e) {
             System.err.println("Error al obtener los flujso de entrada/salida.");
@@ -116,7 +114,7 @@ public class Ahorcado{
     }
 
 
-    public static boolean hayHuecos(String palabra, char[] letrasEncotradas, String respuesta) {
+    public static boolean hayHuecos(String palabra, char[] letrasEncotradas) {
         boolean huecoEncontrado = false;
 
         for (int i = 0; i < palabra.length(); i++) {
