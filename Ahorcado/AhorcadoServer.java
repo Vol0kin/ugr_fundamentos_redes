@@ -28,6 +28,7 @@ public class AhorcadoServer {
 		ArrayList<String> listaPalabras = new ArrayList<String>();
 		String linea;
 		Random numRand = new Random();
+		int numClientes = 0;
 
 		System.out.println("Cargando archivo del que leer...");
 
@@ -79,17 +80,19 @@ public class AhorcadoServer {
 
 			try {
 				socketServicio = serverSocket.accept();
+				numClientes++;
 
 				System.out.println("Recibido socket cliente");
-				System.out.println("Ahorcado se prepara para procesar la peticion...");
+				System.out.println("Ahorcado se prepara para crear una nueva partida...");
 
 				// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
 				// argumento el nuevo socket, para que realice el procesamiento
 				// Este esquema permite que se puedan usar hebras más fácilmente.
 
-				Ahorcado procesador = new Ahorcado(socketServicio,
-												   listaPalabras.get(numRand.nextInt(listaPalabras.size())));
-				procesador.ahorcame();
+				AhorcadoThread ahorcadoThread = new AhorcadoThread(socketServicio,
+												   listaPalabras.get(numRand.nextInt(listaPalabras.size())),
+												   numClientes);
+				ahorcadoThread.start();
 
 				System.out.println("Ahorcado ha procesado la peticion. Respuesta enviada");
 			} catch (IOException e) {
