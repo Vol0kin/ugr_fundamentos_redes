@@ -72,6 +72,7 @@ public class AhorcadoServer {
 
 		// Mientras ... siempre!
 		do {
+			
 			Socket socketServicio = null;
 
 			System.out.println("Esperando sockets...");

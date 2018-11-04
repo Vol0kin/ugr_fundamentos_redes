@@ -34,9 +34,9 @@ public class Ahorcado{
 		char[] letrasEncotradas = new char[palabra.length()];
 
 		// Creamos dos conjuntos de letras: las letras de la palabra
-		//									las letras acertadas
+		//									las letras insertadas
 		Set<Character> letrasPalabra = new TreeSet<>(),
-					   letrasAcertadas = new TreeSet<>();
+					   letrasInsertadas = new TreeSet<>();
 		int intentos = 10;
 		boolean encontrada = false;
 		String respuesta;
@@ -50,30 +50,30 @@ public class Ahorcado{
             inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
             outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
 
-            respuesta = "(Servidor) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
+            respuesta = "Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
 			outPrinter.println(respuesta);
 
             while ( !encontrada && intentos > 0 ){
-				this.mostrarPalabra(letrasAcertadas);
-                respuesta = "(Cliente) Inserta una letra:";
+				this.mostrarPalabra(letrasInsertadas);
+                respuesta = "Inserta una letra:";
                 outPrinter.println(respuesta);
 
 				respuesta = "";
 
                 String peticion = inReader.readLine();
-                //Scanner input = new Scanner(System.in);
                 char userInput = peticion.charAt(0);
 
-                if (letrasAcertadas.contains(userInput)) {
+                if (letrasInsertadas.contains(userInput)) {
                     intentos--;
-                    respuesta = "(Servidor) La letra " + userInput +
+                    respuesta = "La letra " + userInput +
                                  " ya la has dicho, te quedan " + intentos + " intentos";
                 } else if (letrasPalabra.contains(userInput)) {
-                    letrasAcertadas.add(userInput);
+                    letrasInsertadas.add(userInput);
 					letrasPalabra.remove(userInput);
                 } else {
                     intentos--;
-                    respuesta = "(Servidor) La letra "+ userInput +
+                    letrasInsertadas.add(userInput);
+                    respuesta = "La letra "+ userInput +
                                  " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
 
@@ -85,13 +85,12 @@ public class Ahorcado{
             }
 
             if (intentos == 0) {
-                respuesta += "(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
+                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
             } else {
-				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!";
+				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!\n";
 			}
 
             outPrinter.println(respuesta);
-            System.out.println("meeeeh");
 
         } catch (IOException e) {
             System.err.println("Error al obtener los flujos de entrada/salida.");
