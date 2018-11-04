@@ -36,9 +36,18 @@ public class Ahorcado{
 		// Creamos dos conjuntos de letras: las letras de la palabra
 		//									las letras insertadas
 		Set<Character> letrasPalabra = new TreeSet<>(),
-					   letrasInsertadas = new TreeSet<>();
+					   letrasAcertadas = new TreeSet<>(),
+					   letrasFalladas = new TreeSet<>();
 		int intentos = 10;
-		boolean encontrada = false;
+
+		// Variables para controlar el tiempo de partida
+		// Se considera que empieza la partida cuando el cliente
+		// envia el primer caracter
+		long tiempoActual, tiempoFinal = -1;
+
+		// Duracion en segundos de una partida
+		final long segundosPartida = 60;
+		boolean encontrada = false,	timeout = false;
 		String respuesta;
 
 		// Obtener las letras unicas de la palabra
@@ -53,8 +62,8 @@ public class Ahorcado{
             respuesta = "Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
 			outPrinter.println(respuesta);
 
-            while ( !encontrada && intentos > 0 ){
-				this.mostrarPalabra(letrasInsertadas);
+            while (!encontrada && intentos > 0 && !timeout){
+				this.mostrarPalabra(letrasAcertadas);
                 respuesta = "Inserta una letra:";
                 outPrinter.println(respuesta);
 
@@ -63,16 +72,22 @@ public class Ahorcado{
                 String peticion = inReader.readLine();
                 char userInput = peticion.charAt(0);
 
-                if (letrasInsertadas.contains(userInput)) {
-                    intentos--;
+				tiempoActual = System.currentTimeMillis();
+
+				if (tiempoFinal == -1) {
+					tiempoFinal = tiempoActual + segundosPartida * 1000;
+				}
+
+                if (letrasAcertadas.contains(userInput)
+					|| letrasFalladas.contains(userInput)) {
                     respuesta = "La letra " + userInput +
                                  " ya la has dicho, te quedan " + intentos + " intentos";
                 } else if (letrasPalabra.contains(userInput)) {
-                    letrasInsertadas.add(userInput);
+                    letrasAcertadas.add(userInput);
 					letrasPalabra.remove(userInput);
                 } else {
                     intentos--;
-                    letrasInsertadas.add(userInput);
+                    letrasFalladas.add(userInput);
                     respuesta = "La letra "+ userInput +
                                  " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
@@ -81,13 +96,22 @@ public class Ahorcado{
                     encontrada = true;
 				}
 
+				if (tiempoActual > tiempoFinal) {
+					timeout = true;
+				}
+
                 outPrinter.println(respuesta);
+
             }
 
+			respuesta = "";
+
             if (intentos == 0) {
-                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.\n";
-            } else {
-				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!\n";
+                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
+            } else if (timeout) {
+				respuesta += "Timeout: partida terminada. La palabra era:" + palabra + ". Has perdido.";
+			} else {
+				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!";
 			}
 
             outPrinter.println(respuesta);
