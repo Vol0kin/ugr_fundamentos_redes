@@ -23,11 +23,9 @@ public class Ahorcado{
         this.socketServicio=socketServicio;
 
 		// Parseo de la palabra para eliminar acentos
-		System.out.println(palabra);
         this.palabra = Normalizer
 							.normalize(palabra, Normalizer.Form.NFD)
 							.replaceAll("[^\\p{ASCII}]", "");
-		System.out.println(this.palabra);
     }
 
     public void ahorcame(){

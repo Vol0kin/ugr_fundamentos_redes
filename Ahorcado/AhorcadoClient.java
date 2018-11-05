@@ -19,6 +19,7 @@ public class AhorcadoClient {
 		byte []buferEnvio;
 		byte []buferRecepcion = new byte[256];
 		int bytesLeidos=0;
+		boolean terminado = false;
 
 		// Nombre del host donde se ejecuta el servidor:
 		String host="localhost";
@@ -41,22 +42,24 @@ public class AhorcadoClient {
 				mensajeServidor = inReader.readLine();
 				System.out.println(mensajeServidor);
 
-				mensajeServidor = inReader.readLine();
-				System.out.println(mensajeServidor);
+				if (!mensajeServidor.contains("_"))
+					terminado = true;
+
+				else{
+					mensajeServidor = inReader.readLine();
+					System.out.println(mensajeServidor);
 
 
-	            Scanner input = new Scanner(System.in);
-	            String inputUser = input.next();
+		            Scanner input = new Scanner(System.in);
+		            String inputUser = input.next();
 
-				outPrinter.println(inputUser);
+					outPrinter.println(inputUser);
 
-				mensajeServidor = inReader.readLine();
-				System.out.println(mensajeServidor);
+					mensajeServidor = inReader.readLine();
+					System.out.println(mensajeServidor);
+				}
 
-			}while (mensajeServidor != "");
-
-			mensajeServidor = inReader.readLine();
-			System.out.println(mensajeServidor);
+			}while (!terminado);
 
 			socketServicio.close();
 			//////////////////////////////////////////////////////

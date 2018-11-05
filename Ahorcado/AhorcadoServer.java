@@ -84,7 +84,6 @@ public class AhorcadoServer {
 				numClientes++;
 
 				System.out.println("Recibido socket cliente");
-				System.out.println("Ahorcado se prepara para crear una nueva partida...");
 
 				// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
 				// argumento el nuevo socket, para que realice el procesamiento
@@ -95,7 +94,6 @@ public class AhorcadoServer {
 												   numClientes);
 				ahorcadoThread.start();
 
-				System.out.println("Ahorcado ha procesado la peticion. Respuesta enviada");
 			} catch (IOException e) {
 				System.err.println("Error: no se pudo aceptar la conexion solicitada");
 			}
