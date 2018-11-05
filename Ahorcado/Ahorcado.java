@@ -88,7 +88,7 @@ public class Ahorcado{
                 } else {
                     intentos--;
                     letrasFalladas.add(userInput);
-                    respuesta = "La letra "+ userInput +
+                    respuesta = "La letra " + userInput +
                                  " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
 
@@ -101,17 +101,16 @@ public class Ahorcado{
 				}
 
                 outPrinter.println(respuesta);
-
             }
 
 			respuesta = "";
 
             if (intentos == 0) {
-                respuesta += "\n(Servidor) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
+                respuesta += "Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
             } else if (timeout) {
-				respuesta += "Timeout: partida terminada. La palabra era:" + palabra + ". Has perdido.";
+				respuesta += "Timeout: partida terminada. La palabra era: " + palabra + ". Has perdido.";
 			} else {
-				respuesta += "(Servidor) Adivinaste la palabra. Has ganado!";
+				respuesta += "Adivinaste la palabra. Has ganado!";
 			}
 
             outPrinter.println(respuesta);
