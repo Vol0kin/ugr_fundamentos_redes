@@ -24,7 +24,6 @@ public class AhorcadoClient {
 		String host="localhost";
 		// Puerto en el que espera el servidor:
 		int port=8989;
-		int j = 0;
 		// Socket para la conexión TCP
 		Socket socketServicio=null;
 
@@ -54,8 +53,7 @@ public class AhorcadoClient {
 				mensajeServidor = inReader.readLine();
 				System.out.println(mensajeServidor);
 
-				j++;
-			}while (j < 15);
+			}while (mensajeServidor != "");
 
 			mensajeServidor = inReader.readLine();
 			System.out.println(mensajeServidor);

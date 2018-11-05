@@ -82,9 +82,12 @@ public class Ahorcado{
 					|| letrasFalladas.contains(userInput)) {
                     respuesta = "La letra " + userInput +
                                  " ya la has dicho, te quedan " + intentos + " intentos";
+
                 } else if (letrasPalabra.contains(userInput)) {
                     letrasAcertadas.add(userInput);
 					letrasPalabra.remove(userInput);
+					respuesta = "Acertaste, te siguen quedando " + intentos + " intentos";
+
                 } else {
                     intentos--;
                     letrasFalladas.add(userInput);
