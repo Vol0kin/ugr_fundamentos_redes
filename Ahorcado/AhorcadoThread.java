@@ -14,7 +14,7 @@ public class AhorcadoThread extends Thread {
 	private String palabra;
 
 	public AhorcadoThread(Socket socketServicio, String palabra, int numJugador) {
-		System.out.println("Ahorcado ha creado una nueva partida.\nJugador "
+		System.out.println("(201) Ahorcado ha creado una nueva partida.\nJugador "
 							+ numJugador + "\tPalabra: " + palabra);
 		juegoAhorcado = new Ahorcado(socketServicio, palabra);
 		this.numJugador = numJugador;
@@ -23,7 +23,7 @@ public class AhorcadoThread extends Thread {
 
 	public void run() {
 		juegoAhorcado.ahorcame();
-		System.out.println("Ahorcado ha terminado una partida.\nJugador "
+		System.out.println("(202) Ahorcado ha terminado una partida.\nJugador "
 							+ numJugador + "\tPalabra: " + palabra);
 	}
 

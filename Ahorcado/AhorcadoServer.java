@@ -54,20 +54,20 @@ public class AhorcadoServer {
 				System.out.println("Error al cerrar el fichero");
 			}
 
-			System.out.println("Cerrado archivo con exito");
+			System.out.println("Cerrado archivo con exito.");
 		} catch (FileNotFoundException f) {
 			System.out.println("No se ha podido encontrar el fichero");
 		}
 
 		try {
 			// Abrimos el socket en modo pasivo, escuchando el en puerto indicado por "port"
-			System.out.println("Abriendo el socket del servidor en modo pasivo...");
+			System.out.println("(101) Abriendo el socket del servidor en modo pasivo...");
 
 			serverSocket = new ServerSocket(port);
 
-			System.out.println("Abierto socket en modo pasivo con exito");
+			System.out.println("(102) Abierto socket en modo pasivo con exito");
 		} catch (IOException e) {
-			System.err.println("Error al escuchar en el puerto "+port);
+			System.err.println("(901) Error al escuchar en el puerto "+port);
 		}
 
 		// Mientras ... siempre!
@@ -75,7 +75,7 @@ public class AhorcadoServer {
 			
 			Socket socketServicio = null;
 
-			System.out.println("Esperando sockets...");
+			System.out.println("(103) Esperando sockets...");
 			// Aceptamos una nueva conexión con accept()
 			/////////////////////////////////////////////////
 
@@ -83,7 +83,7 @@ public class AhorcadoServer {
 				socketServicio = serverSocket.accept();
 				numClientes++;
 
-				System.out.println("Recibido socket cliente");
+				System.out.println("(104) Recibido socket cliente");
 
 				// Creamos un objeto de la clase ProcesadorYodafy, pasándole como
 				// argumento el nuevo socket, para que realice el procesamiento
@@ -95,7 +95,7 @@ public class AhorcadoServer {
 				ahorcadoThread.start();
 
 			} catch (IOException e) {
-				System.err.println("Error: no se pudo aceptar la conexion solicitada");
+				System.err.println("(902) Error: no se pudo aceptar la conexion solicitada");
 			}
 
 		} while (true);

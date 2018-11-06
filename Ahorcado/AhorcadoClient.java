@@ -53,7 +53,7 @@ public class AhorcadoClient {
 		            Scanner input = new Scanner(System.in);
 		            String inputUser = input.next();
 
-					outPrinter.println(inputUser);
+					outPrinter.println(inputUser.toLowerCase());
 
 					mensajeServidor = inReader.readLine();
 					System.out.println(mensajeServidor);
@@ -66,9 +66,9 @@ public class AhorcadoClient {
 
 			// Excepciones:
 		} catch (UnknownHostException e) {
-			System.err.println("Error: Nombre de host no encontrado.");
+			System.err.println("(905) Error: Nombre de host no encontrado.");
 		} catch (IOException e) {
-			System.err.println("Error de entrada/salida al abrir el socket.");
+			System.err.println("(906) Error de entrada/salida al abrir el socket.");
 		}
 	}
 }

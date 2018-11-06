@@ -57,12 +57,12 @@ public class Ahorcado{
             inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
             outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
 
-            respuesta = "Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
+            respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
 			outPrinter.println(respuesta);
 
             while (!encontrada && intentos > 0 && !timeout){
 				this.mostrarPalabra(letrasAcertadas);
-                respuesta = "Inserta una letra:";
+                respuesta = "(301) Inserta una letra:";
                 outPrinter.println(respuesta);
 
 				respuesta = "";
@@ -78,19 +78,19 @@ public class Ahorcado{
 
                 if (letrasAcertadas.contains(userInput)
 					|| letrasFalladas.contains(userInput)) {
-                    respuesta = "La letra " + userInput +
-                                 " ya la has dicho, te quedan " + intentos + " intentos";
+                    respuesta = "(302) La letra " + userInput +
+                                " ya la has dicho, te quedan " + intentos + " intentos";
 
                 } else if (letrasPalabra.contains(userInput)) {
                     letrasAcertadas.add(userInput);
 					letrasPalabra.remove(userInput);
-					respuesta = "Acertaste, te siguen quedando " + intentos + " intentos";
+					respuesta = "(303) Acertaste, te siguen quedando " + intentos + " intentos";
 
                 } else {
                     intentos--;
                     letrasFalladas.add(userInput);
-                    respuesta = "La letra " + userInput +
-                                 " no se encuentra en la palabra, te quedan " + intentos + " intentos";
+                    respuesta = "(304) La letra " + userInput +
+                                " no se encuentra en la palabra, te quedan " + intentos + " intentos";
                 }
 
                 if (letrasPalabra.isEmpty()) {
@@ -107,17 +107,17 @@ public class Ahorcado{
 			respuesta = "";
 
             if (intentos == 0) {
-                respuesta += "Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
+                respuesta += "(401) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
             } else if (timeout) {
-				respuesta += "Timeout: partida terminada. La palabra era: " + palabra + ". Has perdido.";
+				respuesta += "(903) Timeout: partida terminada. La palabra era: " + palabra + ". Has perdido.";
 			} else {
-				respuesta += "Adivinaste la palabra. Has ganado!";
+				respuesta += "(400) Adivinaste la palabra. Has ganado!";
 			}
 
             outPrinter.println(respuesta);
 
         } catch (IOException e) {
-            System.err.println("Error al obtener los flujos de entrada/salida.");
+            System.err.println("(904) Error al obtener los flujos de entrada/salida.");
         }
     }
 
