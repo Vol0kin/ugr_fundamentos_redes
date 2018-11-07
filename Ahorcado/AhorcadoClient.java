@@ -1,7 +1,3 @@
-//
-// YodafyServidorIterativo
-// (CC) jjramos, 2012
-//
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +11,7 @@ import java.util.Scanner;
 public class AhorcadoClient {
 
 	public static void main(String[] args) {
-		String mensajeServidor;
+		String mensajeServidor, eleccionMenu;
 		byte []buferEnvio;
 		byte []buferRecepcion = new byte[256];
 		int bytesLeidos=0;
@@ -35,34 +31,53 @@ public class AhorcadoClient {
 			PrintWriter outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
 			BufferedReader inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
 
+
+			// Mensaje de bienvenida
 			mensajeServidor = inReader.readLine();
 			System.out.println(mensajeServidor);
 
 			do{
+				// Menu
 				mensajeServidor = inReader.readLine();
+				mensajeServidor += inReader.readLine();
+				mensajeServidor += inReader.readLine();
 				System.out.println(mensajeServidor);
 
-				if (!mensajeServidor.contains("_"))
-					terminado = true;
+				Scanner inputMenu = new Scanner(System.in);
+				eleccionMenu = inputMenu.next();
 
-				else{
-					mensajeServidor = inReader.readLine();
-					System.out.println(mensajeServidor);
+				
+				switch (eleccionMenu){
+					// Jugar
+					case "0":
+						outPrinter.println("(500)");
+						jugar(outPrinter, inReader, mensajeServidor, terminado);
+						break;
+				
+					// Puntuaciones
+					case "1":
+						outPrinter.println("(501)");
+						mensajeServidor = inReader.readLine();
+						System.out.println(mensajeServidor);
+						break;
 
+					// Salir
+					case "2":
+						outPrinter.println("(502)");
+						System.out.println("Hasta pronto!");
+						break;
 
-		            Scanner input = new Scanner(System.in);
-		            String inputUser = input.next();
-
-					outPrinter.println(inputUser.toLowerCase());
-
-					mensajeServidor = inReader.readLine();
-					System.out.println(mensajeServidor);
+					// Elección incorrecta
+					default:
+						System.out.println("Por favor, elige una opción que esté en el menú");
+						break;
 				}
+				
 
-			}while (!terminado);
+			} while(eleccionMenu != "2");
 
 			socketServicio.close();
-			//////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////
 
 			// Excepciones:
 		} catch (UnknownHostException e) {
@@ -71,4 +86,40 @@ public class AhorcadoClient {
 			System.err.println("(906) Error de entrada/salida al abrir el socket.");
 		}
 	}
+
+	public static void jugar(PrintWriter outPrinter, BufferedReader inReader, String mensajeServidor, boolean terminado) throws IOException{
+		mensajeServidor = inReader.readLine();
+		System.out.println(mensajeServidor);
+
+		do{
+			mensajeServidor = inReader.readLine();
+			System.out.println(mensajeServidor);
+
+			if (!mensajeServidor.contains("_"))
+				terminado = true;
+
+			else{
+				mensajeServidor = inReader.readLine();
+				System.out.println(mensajeServidor);
+
+		        Scanner input = new Scanner(System.in);
+		        String inputUser = input.next();
+
+				outPrinter.println(inputUser.toLowerCase());
+
+				mensajeServidor = inReader.readLine();
+				System.out.println(mensajeServidor);
+			}
+
+		}while (!terminado);
+
+		mensajeServidor = inReader.readLine();
+		System.out.println(mensajeServidor);
+
+		Scanner inputNombre = new Scanner(System.in);
+		String nombreJugador = inputNombre.next();
+					    
+		outPrinter.println(nombreJugador);
+	}
+
 }
