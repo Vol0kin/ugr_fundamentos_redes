@@ -41,7 +41,7 @@ public class Ahorcado{
 		// Variables para controlar el tiempo de partida
 		// Se considera que empieza la partida cuando el cliente
 		// envia el primer caracter
-		long tiempoActual, tiempoFinal = -1;
+		long tiempoActual = System.currentTimeMillis(), tiempoFinal = -1;
 
 		// Duracion en segundos de una partida
 		final long segundosPartida = 60;
@@ -57,7 +57,7 @@ public class Ahorcado{
             inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
             outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
 
-            respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos";
+            respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos y " + segundosPartida + " segundos.";
 			outPrinter.println(respuesta);
 
             while (!encontrada && intentos > 0 && !timeout){
@@ -79,18 +79,18 @@ public class Ahorcado{
                 if (letrasAcertadas.contains(userInput)
 					|| letrasFalladas.contains(userInput)) {
                     respuesta = "(302) La letra " + userInput +
-                                " ya la has dicho, te quedan " + intentos + " intentos";
+                                " ya la has dicho, te quedan " + intentos + " intentos y " + (tiempoFinal - tiempoActual) / 1000 + " segundos";
 
                 } else if (letrasPalabra.contains(userInput)) {
                     letrasAcertadas.add(userInput);
 					letrasPalabra.remove(userInput);
-					respuesta = "(303) Acertaste, te siguen quedando " + intentos + " intentos";
+					respuesta = "(303) Acertaste, te siguen quedando " + intentos + " intentos y " + (tiempoFinal - tiempoActual) / 1000 + " segundos";
 
                 } else {
                     intentos--;
                     letrasFalladas.add(userInput);
                     respuesta = "(304) La letra " + userInput +
-                                " no se encuentra en la palabra, te quedan " + intentos + " intentos";
+                                " no se encuentra en la palabra, te quedan " + intentos + " intentos y " + (tiempoFinal - tiempoActual) / 1000 + " segundos";
                 }
 
                 if (letrasPalabra.isEmpty()) {
@@ -109,9 +109,9 @@ public class Ahorcado{
             if (intentos == 0) {
                 respuesta += "(401) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
             } else if (timeout) {
-				respuesta += "(903) Timeout: partida terminada. La palabra era: " + palabra + ". Has perdido.";
+				respuesta += "(402) Se ha agotado el tiempo: partida terminada. La palabra era: " + palabra + ". Has perdido.";
 			} else {
-				respuesta += "(400) Adivinaste la palabra. Has ganado!";
+				respuesta += "(400) Adivinaste la palabra en " + (segundosPartida - (tiempoFinal - tiempoActual) / 1000) + " segundos. Has ganado!";
 			}
 
             outPrinter.println(respuesta);
