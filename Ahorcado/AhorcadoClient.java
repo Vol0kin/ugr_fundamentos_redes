@@ -39,42 +39,42 @@ public class AhorcadoClient {
 			do{
 				// Menu
 				mensajeServidor = inReader.readLine();
-				mensajeServidor += inReader.readLine();
-				mensajeServidor += inReader.readLine();
+				mensajeServidor += "\n" + inReader.readLine();
+				mensajeServidor += "\n" + inReader.readLine();
 				System.out.println(mensajeServidor);
 
 				Scanner inputMenu = new Scanner(System.in);
 				eleccionMenu = inputMenu.next();
 
-				
+
 				switch (eleccionMenu){
 					// Jugar
-					case "0":
-						outPrinter.println("(500)");
-						jugar(outPrinter, inReader, mensajeServidor, terminado);
-						break;
-				
-					// Puntuaciones
 					case "1":
+						outPrinter.println("(500)");
+						jugar(outPrinter, inReader, mensajeServidor);
+						break;
+
+					// Puntuaciones
+					case "2":
 						outPrinter.println("(501)");
-						mensajeServidor = inReader.readLine();
-						System.out.println(mensajeServidor);
+						mostrarRanking(inReader);
 						break;
 
 					// Salir
-					case "2":
+					case "3":
 						outPrinter.println("(502)");
 						System.out.println("Hasta pronto!");
+						terminado = true;
 						break;
 
 					// Elección incorrecta
 					default:
 						System.out.println("Por favor, elige una opción que esté en el menú");
+						outPrinter.println("(503)");
 						break;
 				}
-				
 
-			} while(eleccionMenu != "2");
+			} while(!terminado);
 
 			socketServicio.close();
 			/////////////////////////////////////////////////////
@@ -87,18 +87,19 @@ public class AhorcadoClient {
 		}
 	}
 
-	public static void jugar(PrintWriter outPrinter, BufferedReader inReader, String mensajeServidor, boolean terminado) throws IOException{
+	public static void jugar(PrintWriter outPrinter, BufferedReader inReader, String mensajeServidor) throws IOException{
+		boolean terminado = false;
+
 		mensajeServidor = inReader.readLine();
 		System.out.println(mensajeServidor);
 
-		do{
+		do {
 			mensajeServidor = inReader.readLine();
 			System.out.println(mensajeServidor);
 
-			if (!mensajeServidor.contains("_"))
+			if (!mensajeServidor.contains("_")) {
 				terminado = true;
-
-			else{
+			} else {
 				mensajeServidor = inReader.readLine();
 				System.out.println(mensajeServidor);
 
@@ -111,15 +112,28 @@ public class AhorcadoClient {
 				System.out.println(mensajeServidor);
 			}
 
-		}while (!terminado);
+		} while (!terminado);
 
-		mensajeServidor = inReader.readLine();
-		System.out.println(mensajeServidor);
+		if (mensajeServidor.contains("(400)")) {
+			mensajeServidor = inReader.readLine();
+			System.out.println(mensajeServidor);
 
-		Scanner inputNombre = new Scanner(System.in);
-		String nombreJugador = inputNombre.next();
-					    
-		outPrinter.println(nombreJugador);
+			Scanner inputNombre = new Scanner(System.in);
+			String nombreJugador = inputNombre.next();
+
+			outPrinter.println(nombreJugador);
+		}
+	}
+
+	public static void mostrarRanking(BufferedReader inReader) throws IOException {
+		String mensaje = inReader.readLine();
+
+		int numElementos = Integer.parseInt(mensaje.substring(6));
+
+		for (int i = 0; i < numElementos; i++) {
+			mensaje = inReader.readLine();
+			System.out.println(mensaje);
+		}
 	}
 
 }
