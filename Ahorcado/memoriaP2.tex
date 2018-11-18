@@ -1,0 +1,90 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{makecell}
+
+%Opciones de encabezado y pie de página:
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{Fundamentos de Redes}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\parskip}{10pt}
+
+\begin{document}
+	% Pagina de titulo
+	\pagenumbering{gobble}
+
+	% Pagina de titulo
+	\begin{titlepage}
+
+		\begin{minipage}{\textwidth}
+
+			\centering
+			\textsc{\Large Fundamentos de Redes\\[0.2cm]}
+			\textsc{GRADO EN INGENIERÍA INFORMÁTICA}\\[1cm]
+
+			\noindent\rule[-1ex]{\textwidth}{1pt}\\[3.5ex]
+			{\Huge Práctica 2: Cliente-Servidor\\}
+			\noindent\rule[-1ex]{\textwidth}{2pt}\\[3.5ex]
+			%{\large\bfseries Ejercicio 5}
+		\end{minipage}
+
+		\vspace{1.5cm}
+		
+		\begin{minipage}{\textwidth}
+			\centering
+
+			\textbf{Autores}\\ {Vladislav Nikolov Vasilev\\José María Sánchez Guerrero}\\[2.5ex]
+
+			\vspace{1cm}
+			\textsc{Escuela Técnica Superior de Ingenierías Informática y de Telecomunicación}\\
+			\vspace{1cm}
+			\textsc{Curso 2018-2019}
+		\end{minipage}
+	\end{titlepage}
+	
+	%Indice
+	\pagenumbering{arabic}
+	\tableofcontents
+	\newpage
+	
+	\section{Descripcion de la aplicación}
+	La aplicación que se ha desarrollado es \textit{Ahorcado}, inspirada en el popular juego homónimo en el que un jugador tiene que intentar adivinar una palabra en un número máximo de intentos. La aplicación creada sigue el paradigma cliente-servidor, y permite a varios jugadores jugar de forma concurrente. La aplicación permite tanto jugar una o varias partidas como consultar un ránking para ver lo que han tardado otros jugadores en adivinar sus palabras.\par
+	En esta versión el jugador dispone de 10 vidas y se le resta una por cada fallo. Si ya ha dicho una letra errónea y la repite después no será penalizado. Además de eso, después de decir la primera letra, el jugador tiene un margen de tiempo de 60 segundos para adivinar la palabra. Si no lo hace en el tiempo dado o si pierde todas las vidas, perderá. En caso de adivinar la palabra, se le pedirá su nombre y se guardará el tiempo que ha tardado, su nombre y la palabra en el ránking.\par
+	La aplicación utiliza internamente el protocolo TCP, ya que no interesa que se pueda perder la información al enviar mensajes entre clientes y el servidor.
+	
+	\section{Diagrama de estados del servidor}
+	
+	\section{Mensajes}
+		\subsection{Servidor}
+		\begin{center}
+		\begin{tabular}{| c | c | c |}
+		\hline
+		\textbf{Código} & \textbf{Cuerpo} & \textbf{Descripción}\\ \hline
+		300 & & \\ \hline
+		301 & \makecell{" Insertar una letra:"} & Petición para que el cliente inserte una nueva letra \\ \hline
+		302 &  & \\ \hline
+		303 &  & \\ \hline
+		304 &  & \\ \hline
+		400 &  & \\ \hline
+		401 &  & \\ \hline
+		402 &  & \\ \hline
+		403 &  & \\ \hline
+		600 & Número de elementos & \makecell{Indica el número de elementos del\\ ránking que se van a enviar.} \\ \hline
+		601 & \makecell{Posición + Tiempo\\ + Nombre + Palabra} & \\
+		\hline
+		\end{tabular}
+		\end{center}
+		\subsection{Cliente}
+		
+	
+	\section{Evaluación de la aplicación}
+\end{document}

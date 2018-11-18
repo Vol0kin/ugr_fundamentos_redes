@@ -103,11 +103,6 @@ public class Ahorcado{
 		}
 
         try {
-			/*
-            inReader = new BufferedReader(new InputStreamReader(socketServicio.getInputStream()));
-            outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
-			*/
-
             respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos +
             			" intentos y " + segundosPartida + " segundos.";
 			outPrinter.println(respuesta);
@@ -176,10 +171,12 @@ public class Ahorcado{
 				respuesta = "(403) Escribe tu nombre: ";
 				outPrinter.println(respuesta);
 
+				// Se espera nombre de jugador
 				String nombreJugador = inReader.readLine();
 
 				String linea = tiempoPartida + " " + nombreJugador + "->" + palabra;
 
+				// Se aniade una nueva linea al final del archivo de marcadores
 				try {
 					out = new PrintWriter(new BufferedWriter(new FileWriter("marcadores.txt", true)));
 
@@ -220,16 +217,17 @@ public class Ahorcado{
 
 	public void mostrarPuntuaciones() {
 		// Array de elementos del ranking
-		// Cada posicion guarda un par clave valor
+		// Cada posicion guarda un par clave (tiempo) valor (jugador y palabra)
 		ArrayList<Map.Entry<Float, String>> ranking = new ArrayList<Map.Entry<Float, String>>();
 		String linea;
 		BufferedReader br;
 		File archivo = new File("marcadores.txt");
 
+		// Se lee del fichero de marcadores todos los tiempos
 		try {
 			br = new BufferedReader(new FileReader(archivo));
 
-			System.out.println("Archivo cargado con exito. Leyendo palabras...");
+			System.out.println("Archivo de marcadores cargado con exito. Leyendo...");
 
 			try {
 				while ((linea = br.readLine()) != null) {
@@ -240,7 +238,7 @@ public class Ahorcado{
 				System.out.println("Error al leer linea del archivo");
 			}
 
-			System.out.println("Palabras leidas con exito. Cerrando archivo...");
+			System.out.println("Marcadores leidos con exito. Cerrando archivo...");
 
 			try {
 				br.close();
@@ -253,12 +251,15 @@ public class Ahorcado{
 			System.out.println("No se ha podido encontrar el fichero");
 		}
 
+		// Ordenar ranking por tiempo
 		Collections.sort(ranking, (a, b) -> a.getKey().compareTo(b.getKey()));
 
+		// Enviar numero de elementos que forman el ranking
 		int numElementos = ranking.size() <= 10 ? ranking.size() : 10;
 		String mensaje = "(600) " + Integer.toString(numElementos);
 		outPrinter.println(mensaje);
 
+		// Se envia cada elemento del ranking
 		for (int i = 0; i < numElementos; i++) {
 			mensaje = "(601) " + (i + 1) + " " + ranking.get(i).getKey() + " " + ranking.get(i).getValue();
 			outPrinter.println(mensaje);
