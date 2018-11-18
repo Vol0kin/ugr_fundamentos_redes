@@ -126,6 +126,7 @@ public class AhorcadoClient {
 	}
 
 	public static void mostrarRanking(BufferedReader inReader) throws IOException {
+		System.out.println("Puntuaciones de las 10 mejores partidas:");
 		String mensaje = inReader.readLine();
 
 		int numElementos = Integer.parseInt(mensaje.substring(6));
@@ -134,6 +135,7 @@ public class AhorcadoClient {
 			mensaje = inReader.readLine();
 			System.out.println(mensaje);
 		}
+		System.out.println("\n");
 	}
 
 }

@@ -11,20 +11,16 @@ import java.lang.InterruptedException;
 public class AhorcadoThread extends Thread {
 	private Ahorcado juegoAhorcado;
 	private int numJugador;
-	private String palabra;
 
-	public AhorcadoThread(Socket socketServicio, String palabra, int numJugador) {
-		System.out.println("(201) Ahorcado ha creado una nueva partida.\nJugador "
-							+ numJugador + "\tPalabra: " + palabra);
-		juegoAhorcado = new Ahorcado(socketServicio, palabra);
+	public AhorcadoThread(Socket socketServicio, int numJugador) {
+		System.out.println("(201) Ahorcado ha creado una nueva partida con el cliente " + numJugador);
+		juegoAhorcado = new Ahorcado(socketServicio);
 		this.numJugador = numJugador;
-		this.palabra = palabra;
 	}
 
 	public void run() {
 		juegoAhorcado.ahorcame();
-		System.out.println("(202) Ahorcado ha terminado una partida.\nJugador "
-							+ numJugador + "\tPalabra: " + palabra);
+		System.out.println("(202) Ahorcado ha terminado la partida con el cliente " + numJugador);
 	}
 
 

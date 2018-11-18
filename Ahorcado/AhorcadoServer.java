@@ -15,6 +15,8 @@ import java.util.Random;
 //
 public class AhorcadoServer {
 
+	static ArrayList<String> listaPalabras = new ArrayList<String>();
+
 	public static void main(String[] args) {
 
 		// Puerto de escucha
@@ -25,9 +27,7 @@ public class AhorcadoServer {
 
 		File archivo = new File("palabras.txt");
 		BufferedReader br = null;
-		ArrayList<String> listaPalabras = new ArrayList<String>();
 		String linea;
-		Random numRand = new Random();
 		int numClientes = 0;
 
 		System.out.println("Cargando archivo del que leer...");
@@ -89,9 +89,7 @@ public class AhorcadoServer {
 				// argumento el nuevo socket, para que realice el procesamiento
 				// Este esquema permite que se puedan usar hebras más fácilmente.
 
-				AhorcadoThread ahorcadoThread = new AhorcadoThread(socketServicio,
-												   listaPalabras.get(numRand.nextInt(listaPalabras.size())),
-												   numClientes);
+				AhorcadoThread ahorcadoThread = new AhorcadoThread(socketServicio, numClientes);
 				ahorcadoThread.start();
 
 			} catch (IOException e) {

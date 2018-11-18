@@ -22,14 +22,11 @@ public class Ahorcado{
     private PrintWriter outPrinter;
 
 	private String palabra;
+	Random numRand = new Random();
 
-    public Ahorcado(Socket socketServicio, String palabra) {
+
+    public Ahorcado(Socket socketServicio) {
         this.socketServicio=socketServicio;
-
-		// Parseo de la palabra para eliminar acentos
-        this.palabra = Normalizer
-							.normalize(palabra, Normalizer.Form.NFD)
-							.replaceAll("[^\\p{ASCII}]", "");
     }
 
 	public void ahorcame() {
@@ -48,7 +45,7 @@ public class Ahorcado{
 				outPrinter.println("(3) Salir");
 
 				mensaje = inReader.readLine();
-				System.out.println("Recibido mensaje " + mensaje);
+				System.out.println("\nRecibido mensaje " + mensaje);
 
 				String codigo = mensaje.substring(0, 5);
 
@@ -72,6 +69,15 @@ public class Ahorcado{
 	}
 
     public void jugar(){
+    	this.palabra = AhorcadoServer.listaPalabras.get(numRand.nextInt(AhorcadoServer.listaPalabras.size()));
+
+		// Parseo de la palabra para eliminar acentos
+        this.palabra = Normalizer
+							.normalize(palabra, Normalizer.Form.NFD)
+							.replaceAll("[^\\p{ASCII}]", "");
+
+		System.out.println("Un jugador comenzó una partida con la palabra: " + palabra);
+
 		char[] letrasEncotradas = new char[palabra.length()];
 
 		// Creamos dos conjuntos de letras: las letras de la palabra
@@ -102,7 +108,8 @@ public class Ahorcado{
             outPrinter = new PrintWriter(socketServicio.getOutputStream(), true);
 			*/
 
-            respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos + " intentos y " + segundosPartida + " segundos.";
+            respuesta = "(300) Palabra de " + palabra.length() + " letras. Tienes " + intentos +
+            			" intentos y " + segundosPartida + " segundos.";
 			outPrinter.println(respuesta);
 
             while (!encontrada && intentos > 0 && !timeout){
@@ -154,9 +161,11 @@ public class Ahorcado{
             if (intentos == 0) {
                 respuesta += "(401) Número de intentos superado. La palabra era: " + palabra + ". Has perdido.";
 				outPrinter.println(respuesta);
+				System.out.println("Partida con la palabra " + palabra + " terminada sin ser acertada");
             } else if (timeout) {
 				respuesta += "(402) Se ha agotado el tiempo: partida terminada. La palabra era: " + palabra + ". Has perdido.";
 				outPrinter.println(respuesta);
+				System.out.println("Partida con la palabra " + palabra + " terminada sin ser acertada");
 			} else {
 				float tiempoPartida = segundosPartida - (tiempoFinal - tiempoActual) / 1000;
 				PrintWriter out;
@@ -186,6 +195,9 @@ public class Ahorcado{
 				} catch (FileNotFoundException f) {
 					System.out.println("No se ha podido encontrar el fichero");
 				}
+
+				System.out.println("Partida con la palabra " + palabra + " terminada.\n"+
+								   "El jugador se ha identificado como " + nombreJugador);
 			}
         } catch (IOException e) {
             System.err.println("(904) Error al obtener los flujos de entrada/salida.");
