@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{makecell}
+\usepackage{float}
 
 %Opciones de encabezado y pie de página:
 \usepackage{fancyhdr}
@@ -63,28 +64,56 @@
 	
 	\section{Diagrama de estados del servidor}
 	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.2\textwidth]{./EsquemaFR.png}
+	\end{figure}	
+	
 	\section{Mensajes}
 		\subsection{Servidor}
 		\begin{center}
 		\begin{tabular}{| c | c | c |}
 		\hline
 		\textbf{Código} & \textbf{Cuerpo} & \textbf{Descripción}\\ \hline
-		300 & & \\ \hline
-		301 & \makecell{" Insertar una letra:"} & Petición para que el cliente inserte una nueva letra \\ \hline
-		302 &  & \\ \hline
-		303 &  & \\ \hline
-		304 &  & \\ \hline
-		400 &  & \\ \hline
-		401 &  & \\ \hline
-		402 &  & \\ \hline
-		403 &  & \\ \hline
-		600 & Número de elementos & \makecell{Indica el número de elementos del\\ ránking que se van a enviar.} \\ \hline
-		601 & \makecell{Posición + Tiempo\\ + Nombre + Palabra} & \\
+		300 & \makecell{``Palabra de \textit{X} letras.\\Tienes \textit{Y} intentos y\\ \textit{T} segundos."} & \makecell{Mensaje informativo de bienvenida al\\juego.}\\ \hline
+		301 & \makecell{``Insertar una letra:"} & \makecell{Petición para que el cliente inserte\\una nueva letra.} \\ \hline
+		302 & \makecell{``Ya has dicho la letra \textit{L}.\\Te quedan \textit{Y} intentos\\ y \textit{T} segundos."} & \makecell{Informa que el usuario ya ha dicho la letra.} \\ \hline
+		303 & \makecell{``Acertaste, te quedan \textit{Y}\\intentos y \textit{T} segundos."} & Informa al usuario que ha acertado la letra. \\ \hline
+		304 & \makecell{``La letra \textit{L} no se encuentra\\en la palabra. Te quedan\\\textit{Y} intentos y \textit{T} segundos."} & \makecell{Informa al usuario que la palabra no contiene\\ la letra especificada.}\\ \hline
+		400 & \makecell{``Adivinaste la palabra en\\ \textit{T} segundos. Has ganado!"} & \makecell{Indica al usuario que ha adivinado\\ la palabra en un tiempo \textit{T}.} \\ \hline
+		401 & \makecell{``Número de intentos superado.\\La palabra era \textit{P}. Has perdido!"} & \makecell{Indica al usuario que se ha quedado\\ sin intentos y le dice la palabra.}\\ \hline
+		402 & \makecell{``Se ha agotado el tiempo:\\partida terminada. La palabra\\ era \textit{P}. Has perdido!"} & \makecell{Indica al usuario que se ha quedado\\ sin tiempo y le dice la palabra.}\\ \hline
+		403 & ``Escribe tu nombre:" & \makecell{Solicita al usuario que escriba su nombre\\al adivinar la palabra}\\ \hline
+		600 & \makecell{Número de elementos\\del ránking a enviar} & \makecell{Indica el número de elementos del\\ ránking que se van a enviar.} \\ \hline
+		601 & \makecell{Posición + Tiempo\\ + Nombre + Palabra} & \makecell{Mensaje que contiene una posición del\\ránking.} \\
 		\hline
 		\end{tabular}
 		\end{center}
 		\subsection{Cliente}
-		
-	
+		\begin{center}
+		\begin{tabular}{| c | c | c |}
+		\hline
+		\textbf{Código} & \textbf{Cuerpo} & \textbf{Descripción}\\ \hline
+		500 & & Solicita al servidor el comienzo de una nueva partida. \\ \hline
+		501 & & \makecell{Solicita al servidor la consulta de los ránkings. Se consultan los 10\\ primeros puestos, o si hay menos, los que haya.} \\ \hline
+		502 & & Permite salir del menú y de la aplicación.\\ \hline
+		503 & & Código de error al no haber escogido una opción válida.\\
+		\hline
+		\end{tabular}
+		\end{center}
+
 	\section{Evaluación de la aplicación}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{./PartidaNormal.png}
+	\caption{Imágen que muestra una partida normal. En la parte izquierda se puede ver el servidor. En la parte derecha, el cliente. El cliente inicia una nueva partida y adivina la palabra. Al acertarla, se le pide insertar el nombre. El jugador inserta su nombre y se guarda el resultado en el archivo de marcadores.} \label{fig:Partida normal}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{./PartidaConcurrente.png}
+	\caption{Imágen que muestra un ejemplo de concurrencia. A la izquierda se ve el servidor, que atiende a más de un cliente concurrentemente. A la derecha se pueden ver 2 clientes. El de arriba había iniciado una partida pero al final ha perdido por quedarse sin tiempo. El de abajo había iniciado una nueva partida y ha acertado la palabra, con lo cuál se le ha pedido su nombre y se ha guardado en los marcadores. A continuación, ha solicidado ver el ránking, con lo cuál se le envía la información solicitada.} \label{fig:Partida concurrente}
+	\end{figure}
+	
 \end{document}
